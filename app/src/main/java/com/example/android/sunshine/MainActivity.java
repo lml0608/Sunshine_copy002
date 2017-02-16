@@ -18,6 +18,8 @@ package com.example.android.sunshine;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,45 +35,38 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView mWeatherTextView;
+    //private TextView mWeatherTextView;
+    private RecyclerView mRecyclerView;
 
     private TextView mErrorMessageDisplay;
 
     private ProgressBar mLoadingIndicator;
+
+    private ForecastAdapter mForecastAdapter;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
 
-        mWeatherTextView = (TextView) findViewById(R.id.tv_weather_data);
+        //mWeatherTextView = (TextView) findViewById(R.id.tv_weather_data);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_forecast);
         mErrorMessageDisplay = (TextView) findViewById(R.id.tv_error_message_display);
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
-//        String[] dummyWeatherData = {
-//                "Today, May 17 - Clear - 17°C / 15°C",
-//                "Tomorrow - Cloudy - 19°C / 15°C",
-//                "Thursday - Rainy- 30°C / 11°C",
-//                "Friday - Thunderstorms - 21°C / 9°C",
-//                "Saturday - Thunderstorms - 16°C / 7°C",
-//                "Sunday - Rainy - 16°C / 8°C",
-//                "Monday - Partly Cloudy - 15°C / 10°C",
-//                "Tue, May 24 - Meatballs - 16°C / 18°C",
-//                "Wed, May 25 - Cloudy - 19°C / 15°C",
-//                "Thu, May 26 - Stormy - 30°C / 11°C",
-//                "Fri, May 27 - Hurricane - 21°C / 9°C",
-//                "Sat, May 28 - Meteors - 16°C / 7°C",
-//                "Sun, May 29 - Apocalypse - 16°C / 8°C",
-//                "Mon, May 30 - Post Apocalypse - 15°C / 10°C",
-//        };
-//
-//
-//
-//        //将数组内容显示在mWeatherTextView控件
-//        for (String dummyWeatherDay : dummyWeatherData) {
-//            mWeatherTextView.append(dummyWeatherDay + "\n\n");
-//        }
+
+        //第一个参数上下文context，第二个int参数是布局方向,HORIZONTAL或VERTICAL
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+
+        mRecyclerView.setHasFixedSize(true);
+
+        mForecastAdapter = new ForecastAdapter();
+
+        mRecyclerView.setAdapter(mForecastAdapter);
+
 
         loadWeatherData();
 
@@ -88,11 +83,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void showWeatherDataView() {
         mErrorMessageDisplay.setVisibility(View.INVISIBLE);
-        mWeatherTextView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.VISIBLE);
     }
 
     private void showErrorMessage() {
-        mWeatherTextView.setVisibility(View.INVISIBLE);
+        mRecyclerView.setVisibility(View.INVISIBLE);
         mErrorMessageDisplay.setVisibility(View.VISIBLE);
     }
 
@@ -133,10 +128,7 @@ public class MainActivity extends AppCompatActivity {
             mLoadingIndicator.setVisibility(View.INVISIBLE);
             if (weatherData != null) {
 
-                for (String weatherString : weatherData) {
-
-                    mWeatherTextView.append(weatherString + "\n\n\n");
-                }
+                mForecastAdapter.setWeatherData(weatherData);
             } else {
 
                 showErrorMessage();
@@ -161,8 +153,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         if (id == R.id.action_refresh) {
-
-            mWeatherTextView.setText("");
+            mForecastAdapter.setWeatherData(null);
             loadWeatherData();
             return true;
         }
