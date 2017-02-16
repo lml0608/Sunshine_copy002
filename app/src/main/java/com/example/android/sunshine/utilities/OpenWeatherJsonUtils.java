@@ -26,6 +26,7 @@ import java.net.HttpURLConnection;
 
 /**
  * Utility functions to handle OpenWeatherMap JSON data.
+ * 处理 json数据的函数
  */
 public final class OpenWeatherJsonUtils {
 
@@ -37,9 +38,9 @@ public final class OpenWeatherJsonUtils {
      * getFullWeatherDataFromJson function, leveraging the data we have stored in the JSON. For
      * now, we just convert the JSON into human-readable strings.
      *
-     * @param forecastJsonStr JSON response from server
+     * @param forecastJsonStr JSON response from server json格式数据
      *
-     * @return Array of Strings describing weather data
+     * @return Array of Strings describing weather data 描述天气的字符串数组
      *
      * @throws JSONException If JSON data cannot be properly parsed
      */
@@ -64,9 +65,11 @@ public final class OpenWeatherJsonUtils {
         /* String array to hold each day's weather String */
         String[] parsedWeatherData = null;
 
+        //解析 JSONObject(String  forecastJsonStr)
         JSONObject forecastJson = new JSONObject(forecastJsonStr);
 
         /* Is there an error? */
+        //cod = 200
         if (forecastJson.has(OWM_MESSAGE_CODE)) {
             int errorCode = forecastJson.getInt(OWM_MESSAGE_CODE);
 
@@ -82,6 +85,7 @@ public final class OpenWeatherJsonUtils {
             }
         }
 
+        //获取json中 list数组
         JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
         parsedWeatherData = new String[weatherArray.length()];
