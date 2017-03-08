@@ -14,19 +14,14 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<!--COMPLETED (1) Change the ConstraintLayout to a FrameLayout-->
-<!--COMPLETED (7) Remove the line that declares the id, we don't need it-->
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!--COMPLETED (8) Wrap the TextView in a ScrollView-->
-    <!--COMPLETED (9) Set the ScrollView width to match_parent and the height to wrap_content-->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview_forecast"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
 
     <TextView
         android:id="@+id/tv_error_message_display"
@@ -35,13 +30,13 @@
         android:padding="16dp"
         android:text="@string/error_message"
         android:textSize="20sp"
-        android:visibility="invisible"/>
-
+        android:visibility="invisible" />
 
     <ProgressBar
         android:id="@+id/pb_loading_indicator"
-        android:layout_width="42dp"
         android:layout_height="42dp"
+        android:layout_width="42dp"
         android:layout_gravity="center"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
+
 </FrameLayout>

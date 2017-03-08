@@ -27,7 +27,6 @@ import java.util.Scanner;
 
 /**
  * These utilities will be used to communicate with the weather servers.
- * 这些工具将用于与天气服务器通信
  */
 public final class NetworkUtils {
 
@@ -70,7 +69,6 @@ public final class NetworkUtils {
      * @return The URL to use to query the weather server.
      */
     public static URL buildUrl(String locationQuery) {
-        /** This will be implemented in a future lesson **/
         Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                 .appendQueryParameter(QUERY_PARAM, locationQuery)
                 .appendQueryParameter(FORMAT_PARAM, format)
@@ -78,18 +76,15 @@ public final class NetworkUtils {
                 .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
                 .build();
 
-        //https://andfun-weather.udacity.com/staticweather?q=locationQuery&mode=json&units=metric&cnt=14
-
-
-
         URL url = null;
-
         try {
             url = new URL(builtUri.toString());
-        }catch (MalformedURLException e) {
+        } catch (MalformedURLException e) {
             e.printStackTrace();
         }
+
         Log.v(TAG, "Built URI " + url);
+
         return url;
     }
 
