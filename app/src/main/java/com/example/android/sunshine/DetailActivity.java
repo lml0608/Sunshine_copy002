@@ -36,6 +36,9 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @return 意图，创建分享
+     */
     private Intent createShareForecastIntent(){
 
         Intent shareIntent = ShareCompat.IntentBuilder.from(this)
@@ -46,6 +49,11 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * 菜单
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -53,8 +61,23 @@ public class DetailActivity extends AppCompatActivity {
         menuInflater.inflate(R.menu.detail, menu);
 
         MenuItem menuItem = menu.findItem(R.id.action_share);
+        //打开分享意图
         menuItem.setIntent(createShareForecastIntent());
         return true;
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                //启动设置页面SettingsActivity
+                Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+                startActivity(startSettingsActivity);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
 }

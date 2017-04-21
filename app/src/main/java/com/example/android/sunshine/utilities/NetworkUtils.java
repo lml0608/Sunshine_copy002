@@ -51,7 +51,7 @@ public final class NetworkUtils {
     private static final String format = "json";
     /* The units we want our API to return */
     private static final String units = "metric";
-    /* The number of days we want our API to return */
+    /* The number of days we want our API to return 14天的天气*/
     private static final int numDays = 14;
 
     final static String QUERY_PARAM = "q";
@@ -70,11 +70,12 @@ public final class NetworkUtils {
      */
     public static URL buildUrl(String locationQuery) {
         Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
-                .appendQueryParameter(QUERY_PARAM, locationQuery)
-                .appendQueryParameter(FORMAT_PARAM, format)
-                .appendQueryParameter(UNITS_PARAM, units)
-                .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+                .appendQueryParameter(QUERY_PARAM, locationQuery) //q=locationQuery
+                .appendQueryParameter(FORMAT_PARAM, format) //mode = json
+                .appendQueryParameter(UNITS_PARAM, units) //units = metric
+                .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays)) //cnt = 14
                 .build();
+        //https://andfun-weather.udacity.com/staticweather?q=locationQuery&mode=json&units=metric&cnt=14
 
         URL url = null;
         try {

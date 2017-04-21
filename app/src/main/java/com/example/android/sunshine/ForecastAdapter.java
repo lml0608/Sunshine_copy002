@@ -31,19 +31,15 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
 
     private String[] mWeatherData;
 
-    // COMPLETED (3) Create a final private ForecastAdapterOnClickHandler called mClickHandler
-    /*
-     * An on-click handler that we've defined to make it easy for an Activity to interface with
-     * our RecyclerView
-     */
+
     private final ForecastAdapterOnClickHandler mClickHandler;
 
-    // COMPLETED (1) Add an interface called ForecastAdapterOnClickHandler
-    // COMPLETED (2) Within that interface, define a void method that access a String as a parameter
+
     /**
-     * The interface that receives onClick messages.
+     * 回调接口，
      */
     public interface ForecastAdapterOnClickHandler {
+        //点击RecyclerView每一个条目的事件
         void onClick(String weatherForDay);
     }
 
@@ -55,6 +51,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
      *                     when an item is clicked.
      */
     public ForecastAdapter(ForecastAdapterOnClickHandler clickHandler) {
+        //获取ForecastAdapterOnClickHandler对象
         mClickHandler = clickHandler;
     }
 

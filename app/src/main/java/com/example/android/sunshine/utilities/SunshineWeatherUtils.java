@@ -312,6 +312,8 @@ public final class SunshineWeatherUtils {
     }
 
     /**
+     *
+     * 返回天气图表资源id
      * Helper method to provide the icon resource id according to the weather condition id returned
      * by the OpenWeatherMap call.
      *

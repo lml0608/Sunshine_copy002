@@ -17,8 +17,10 @@ package com.example.android.sunshine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +44,8 @@ import java.net.URL;
 import static android.support.v4.app.LoaderManager.*;
 
 public class MainActivity extends AppCompatActivity implements
-        ForecastAdapterOnClickHandler, LoaderCallbacks<String[]> {
+        ForecastAdapterOnClickHandler, LoaderCallbacks<String[]>,
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
@@ -55,10 +58,14 @@ public class MainActivity extends AppCompatActivity implements
 
     private static final int FORECAST_LOADER_ID = 0;
 
+    private static boolean PREFERENCES_HAVE_BEEN_UPDATE = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
+
+        Log.d(TAG,"onCreate: registering preference changed listener");
 
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview_forecast);
@@ -86,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
 
-        int loaderId = FORECAST_LOADER_ID;
+        int loaderId = FORECAST_LOADER_ID; //0
 
         LoaderCallbacks<String[]> callback = MainActivity.this;
 
@@ -94,10 +101,18 @@ public class MainActivity extends AppCompatActivity implements
 
         //第一步初始化任务执行 step1
         getSupportLoaderManager().initLoader(loaderId, bundleForLoader, callback);
+        //getSupportLoaderManager().initLoader(0, null, this);
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
 
     }
 
 
+    //第一步初始化任务执行 step1  getSupportLoaderManager().initLoader
+    //第二步，自动调用   onCreateLoader
+    //第三步，后台执行任务   onCreateLoader
+    //第四步，任务执行完成后，更新UI
     @Override
     public Loader<String[]> onCreateLoader(int id, final Bundle loaderArgs) {
         return new AsyncTaskLoader<String[]>(this) {
@@ -125,15 +140,18 @@ public class MainActivity extends AppCompatActivity implements
 
                 String locationQuery = SunshinePreferences
                         .getPreferredWeatherLocation(MainActivity.this);
-
+                //调用NetworkUtils.buildUrl(locationQuery) 返回最终请求的url
                 URL weatherRequestUrl = NetworkUtils.buildUrl(locationQuery);
 
                 Log.i(TAG, String.valueOf(weatherRequestUrl));
+                //https://andfun-weather.udacity.com/staticweather?q=94043%2CUSA&mode=json&units=metric&cnt=14
+
 
                 try {
-
+                    //网络请求返回的数据String
                     String jsonWeatherResponse = NetworkUtils.getResponseFromHttpUrl(weatherRequestUrl);
 
+                    //jsonWeatherResponse转化为josn并装载为数组返回
                     String[] simpleJsonWeatherData = OpenWeatherJsonUtils
                             .getSimpleWeatherStringsFromJson(MainActivity.this, jsonWeatherResponse);
 
@@ -163,7 +181,9 @@ public class MainActivity extends AppCompatActivity implements
     //第四步，任务执行完成后，更新UI
     @Override
     public void onLoadFinished(Loader<String[]> loader, String[] data) {
+        //进度条消失
         mLoadingIndicator.setVisibility(View.INVISIBLE);
+        //将加载得到的数据给适配器
         mForecastAdapter.setWeatherData(data);
         if (null == data) {
             showErrorMessage();
@@ -177,6 +197,9 @@ public class MainActivity extends AppCompatActivity implements
 
     }
 
+    /**
+     * 使适配器中数据列表list为空
+     */
     private void invalidateData() {
 
         mForecastAdapter.setWeatherData(null);
@@ -184,7 +207,9 @@ public class MainActivity extends AppCompatActivity implements
 
     //打开地图软件
     private void openLocationInMap() {
-        String addressString = "1600 Ampitheatre Parkway, CA";
+        //String addressString = "1600 Ampitheatre Parkway, CA";
+
+        String addressString = SunshinePreferences.getPreferredWeatherLocation(this);
 
         Uri geoLocation = Uri.parse("geo:0,0?q=" + addressString);
 
@@ -200,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-    //点击事件，打开详情界面
+    //点击事件，打开详情界面，实现回调接口抽象函数  interface ForecastAdapterOnClickHandler
     @Override
     public void onClick(String weatherForDay) {
         Context context = this;
@@ -213,6 +238,52 @@ public class MainActivity extends AppCompatActivity implements
         startActivity(intent);
     }
 
+    @Override
+    protected void onStart() {
+        Log.d(TAG, "onStart");
+        super.onStart();
+        if (PREFERENCES_HAVE_BEEN_UPDATE) {
+            Log.d(TAG, "onStart: preference were updated");
+            //加载
+            getSupportLoaderManager().restartLoader(FORECAST_LOADER_ID, null, this);
+            PREFERENCES_HAVE_BEEN_UPDATE = false;
+        }
+
+    }
+
+    @Override
+    protected void onRestart() {
+        Log.d(TAG, "onRestart");
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(TAG, "onResume");
+        super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(TAG, "onStop");
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(TAG, "onPause");
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        Log.i(TAG, "onDestroy");
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
 
     //正常有数据时，RecyclerView显示，进度条不显示
     private void showWeatherDataView() {
@@ -251,15 +322,29 @@ public class MainActivity extends AppCompatActivity implements
 
         if (id == R.id.action_refresh) {
             //重构刷新功能以使用我们的AsyncTaskLoader
+            //先清空适配器里数据
             invalidateData();
+            //使用AsyncTaskLoader重新加载请求
             getSupportLoaderManager().restartLoader(FORECAST_LOADER_ID, null, this);
             return true;
         }
         if (id == R.id.action_map) {
+            //打开地图
             openLocationInMap();
+            return true;
+        }
+        if (id == R.id.action_settings) {
+            //打开设置界面
+            Intent startSettingsActivity = new Intent(this, SettingsActivity.class);
+            startActivity(startSettingsActivity);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        PREFERENCES_HAVE_BEEN_UPDATE = true;
     }
 }

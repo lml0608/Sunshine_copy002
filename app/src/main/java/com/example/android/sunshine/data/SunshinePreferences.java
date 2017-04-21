@@ -16,6 +16,10 @@
 package com.example.android.sunshine.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.example.android.sunshine.R;
 
 public class SunshinePreferences {
 
@@ -39,6 +43,7 @@ public class SunshinePreferences {
     private static final String DEFAULT_WEATHER_LOCATION = "94043,USA";
     private static final double[] DEFAULT_WEATHER_COORDINATES = {37.4284, 122.0724};
 
+    //地图默认位置
     private static final String DEFAULT_MAP_LOCATION =
             "1600 Amphitheatre Parkway, Mountain View, CA 94043";
 
@@ -61,8 +66,8 @@ public class SunshinePreferences {
      *
      * @param c               Context used to get the SharedPreferences
      * @param locationSetting The location string used to request updates from the server.
-     * @param lat             The latitude of the city
-     * @param lon             The longitude of the city
+     * @param lat             The latitude of the city  纬度
+     * @param lon             The longitude of the city 经度
      */
     static public void setLocation(Context c, String locationSetting, double lat, double lon) {
         /** This will be implemented in a future lesson **/
@@ -88,7 +93,14 @@ public class SunshinePreferences {
      */
     public static String getPreferredWeatherLocation(Context context) {
         /** This will be implemented in a future lesson **/
-        return getDefaultWeatherLocation();
+        //return getDefaultWeatherLocation();
+
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
+
+        String keyForLocation = context.getString(R.string.pref_location_key);
+        String defaultLocation = context.getString(R.string.pref_location_default);
+        return prefs.getString(keyForLocation, defaultLocation);
     }
 
     /**
@@ -99,7 +111,24 @@ public class SunshinePreferences {
      */
     public static boolean isMetric(Context context) {
         /** This will be implemented in a future lesson **/
-        return true;
+        //return true;
+
+        SharedPreferences prefs = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        String keyForUnits = context.getString(R.string.pref_units_key);
+        String defaultUnits = context.getString(R.string.pref_units_metric);
+        String preferredUnits = prefs.getString(keyForUnits, defaultUnits);
+        String metric = context.getString(R.string.pref_units_metric);
+        boolean userPrefersMetric;
+        if (metric.equals(preferredUnits)) {
+
+            userPrefersMetric = true;
+        } else {
+            userPrefersMetric = false;
+        }
+        return userPrefersMetric;
+
+
     }
 
     /**
