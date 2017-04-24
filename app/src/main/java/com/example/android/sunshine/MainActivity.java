@@ -297,15 +297,8 @@ public class MainActivity extends AppCompatActivity implements
 //     *
 //     * @param weatherForDay String describing weather details for a particular day
 //     */
-//    @Override
-//    public void onClick(String weatherForDay) {
-//        Context context = this;
-//        Class destinationClass = DetailActivity.class;
-//        Intent intentToStartDetailActivity = new Intent(context, destinationClass);
-//        intentToStartDetailActivity.putExtra(Intent.EXTRA_TEXT, weatherForDay);
-//        startActivity(intentToStartDetailActivity);
-//    }
 
+    @Override
     public void onClick(long date) {
 
         Intent weatherDetailIntent = new Intent(MainActivity.this, DetailActivity.class);
