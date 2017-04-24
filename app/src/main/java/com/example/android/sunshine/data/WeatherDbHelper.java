@@ -5,6 +5,7 @@ import android.content.pm.FeatureInfo;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.v4.app.NavUtils;
+import android.util.Log;
 
 import com.example.android.sunshine.data.WeatherContract.WeatherEntry;
 
@@ -34,9 +35,10 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
                         WeatherEntry.COLUMN_MAX_TEMP + " REAL NOT NULL, " +
                         WeatherEntry.COLUMN_HUMIDITY + " REAL NOT NULL, " +
                         WeatherEntry.COLUMN_PRESSURE + " REAL NOT NULL, " +
-                        WeatherEntry.COLUMN_PRESSURE + " REAL NOT NULL, " +
-                        WeatherEntry.COLUMN_PRESSURE + " REAL NOT NULL,"  +
+                        WeatherEntry.COLUMN_WIND_SPEED + " REAL NOT NULL, " +
+                        WeatherEntry.COLUMN_DEGREES + " REAL NOT NULL,"  +
                         " UNIQUE (" + WeatherEntry.COLUMN_DATE + ") ON CONFLICT REPLACE);";
+        Log.i("shujuk =", SQL_CREATE_WEATHER_TABLE);
 
         db.execSQL(SQL_CREATE_WEATHER_TABLE);
 
