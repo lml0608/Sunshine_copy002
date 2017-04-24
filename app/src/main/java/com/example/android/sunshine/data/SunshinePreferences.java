@@ -52,12 +52,17 @@ public class SunshinePreferences {
      * Longitude)
      *
      * @param c        Context used to get the SharedPreferences
-     * @param cityName A human-readable city name, e.g "Mountain View"
      * @param lat      The latitude of the city
      * @param lon      The longitude of the city
      */
-    static public void setLocationDetails(Context c, String cityName, double lat, double lon) {
+    static public void setLocationDetails(Context c, double lat, double lon) {
         /** This will be implemented in a future lesson **/
+
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(c);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong(PREF_COORD_LAT, Double.doubleToRawLongBits(lat));
+        editor.putLong(PREF_COORD_LONG, Double.doubleToRawLongBits(lon));
+        editor.commit();
     }
 
     /**
