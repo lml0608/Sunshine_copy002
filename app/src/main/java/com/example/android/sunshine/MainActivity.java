@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements
 
 //      COMPLETED (27) Remove the previous body of onLoadFinished
 
-        Log.i(TAG, String.valueOf(data.getCount()));
+        Log.i(TAG, "你好" + String.valueOf(data.getCount()));
 
 //      COMPLETED (28) Call mForecastAdapter's swapCursor method and pass in the new Cursor
         mForecastAdapter.swapCursor(data);
