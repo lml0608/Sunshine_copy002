@@ -1,5 +1,6 @@
 package com.example.android.sunshine;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
@@ -8,6 +9,10 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.content.SharedPreferences;
 import android.support.v7.preference.PreferenceScreen;
 import android.util.Log;
+
+import com.example.android.sunshine.data.SunshinePreferences;
+import com.example.android.sunshine.data.WeatherContract;
+import com.example.android.sunshine.sync.SunshineSyncUtils;
 
 /**
  * Created by lfs-ios on 2017/4/21.
@@ -55,6 +60,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
      */
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        Activity activity = getActivity();
+
+        if (key.equals(getString(R.string.pref_location_key))) {
+            SunshinePreferences.resetLocationCoordinates(activity);
+            SunshineSyncUtils.startImmediateSync(activity);
+        }  else if (key.equals(getString(R.string.pref_units_key))) {
+            // units have changed. update lists of weather entries accordingly
+            activity.getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
+        }
 
         Log.i(TAG, "key=" + key);
         //获取指定key所对应的preference对象
