@@ -14,74 +14,46 @@
 
     <ImageView
         android:id="@+id/weather_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         tools:src="@drawable/art_clouds"/>
 
-    <!--<android.support.constraint.Guideline-->
-        <!--android:id="@+id/guideline"-->
-        <!--android:layout_width="0dp"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:orientation="horizontal"-->
-        <!--app:layout_constraintGuide_percent="0.015625"-->
-        <!--tools:layout_editor_absoluteY="1dp"-->
-        <!--tools:layout_editor_absoluteX="0dp"/>-->
-
-    <TextView
-        android:id="@+id/high_temperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="28dp"
-        tools:text="19\u00b0"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"/>
-
-    <TextView
-        android:id="@+id/low_temperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:textSize="28dp"
-        tools:text="10\u00b0"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/high_temperature"
-        android:layout_toStartOf="@+id/high_temperature"
-        android:layout_marginRight="16dp"
-        android:layout_marginEnd="16dp"/>
 
     <TextView
         android:textColor="#f00"
         android:id="@+id/date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintLeft_toRightOf="@+id/weather_icon"
         tools:text="Today, April 03"
-        android:layout_alignBaseline="@+id/low_temperature"
-        android:layout_alignBottom="@+id/low_temperature"
-        android:layout_alignLeft="@+id/weather_description"
-        android:layout_alignStart="@+id/weather_description"/>
+        android:textSize="18dp"
+        android:layout_toRightOf="@+id/weather_icon"/>
 
     <TextView
         android:id="@+id/weather_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="Rainy"
-        android:layout_marginLeft="20dp"
-        android:layout_marginStart="20dp"
-        android:layout_below="@+id/guideline"
+        android:textSize="18sp"
         android:layout_toRightOf="@+id/weather_icon"
-        />
+        android:layout_below="@+id/date"/>
 
-    <!--<TextView-->
-        <!--android:text="Today, April 03"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:id="@+id/textView"-->
-        <!--android:layout_alignBaseline="@+id/date"-->
-        <!--android:layout_alignBottom="@+id/date"-->
-        <!--android:layout_centerHorizontal="true"/>-->
+    <TextView
+        android:id="@+id/high_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/low_temperature"
+        android:layout_marginRight="8dp"
+        android:textSize="28sp"
+        tools:text="19\u00b0"/>
+
+    <TextView
+        android:id="@+id/low_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textSize="28sp"
+        tools:text="10\u00b0"/>
+
 
 </RelativeLayout>
 
