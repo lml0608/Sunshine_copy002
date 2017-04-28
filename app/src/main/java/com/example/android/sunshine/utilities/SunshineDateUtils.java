@@ -17,6 +17,7 @@ package com.example.android.sunshine.utilities;
 
 import android.content.Context;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 import com.example.android.sunshine.R;
 
@@ -25,36 +26,52 @@ import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 处理日期的类
  * Class for handling date conversions that are useful for Sunshine.
  */
 public final class SunshineDateUtils {
 
-    public static final long SECOND_IN_MILLIS = 1000;
-    public static final long MINUTE_IN_MILLIS = SECOND_IN_MILLIS * 60;
-    public static final long HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60;
-    public static final long DAY_IN_MILLIS = HOUR_IN_MILLIS * 24;
+    private static final String TAG = "SunshineDateUtils";
+
+    public static final long SECOND_IN_MILLIS = 1000;//1000毫秒=1秒
+    public static final long MINUTE_IN_MILLIS = SECOND_IN_MILLIS * 60;//1分钟
+    public static final long HOUR_IN_MILLIS = MINUTE_IN_MILLIS * 60;//1小时
+    public static final long DAY_IN_MILLIS = HOUR_IN_MILLIS * 24;//1天
 
 
+    /**
+     * @return 当前时间毫秒数
+     */
     public static long getNormalizedUtcDateForToday() {
 
         /*
          * This number represents the number of milliseconds that have elapsed since January
          * 1st, 1970 at midnight in the GMT time zone.
+         * 获得的是自1970-1-01 00:00:00.000 到当前时刻的时间距离,类型为long
          */
         long utcNowMillis = System.currentTimeMillis();
+
+        //1493357412811
 
         /*
          * This TimeZone represents the device's current time zone. It provides us with a means
          * of acquiring the offset for local time from a UTC time stamp.
+         * 获取当前所在时区
          */
         TimeZone currentTimeZone = TimeZone.getDefault();
+        //:libcore.util.ZoneInfo
+        // [id="Asia/Shanghai",mRawOffset=28800000,
+        // mEarliestRawOffset=28800000,mUseDst=false,mDstSavings=3600000,transitions=16]
+
 
         /*
          * The getOffset method returns the number of milliseconds to add to UTC time to get the
          * elapsed time since the epoch for our current time zone. We pass the current UTC time
          * into this method so it can determine changes to account for daylight savings time.
+         * 返回格林威治时间和本地时间之间的时差
          */
         long gmtOffsetMillis = currentTimeZone.getOffset(utcNowMillis);
+        //gmtOffsetMillis=:28800000
 
         /*
          * UTC time is measured in milliseconds from January 1, 1970 at midnight from the GMT
@@ -63,17 +80,24 @@ public final class SunshineDateUtils {
          * January 1, 1970 (GMT) time.
          */
         long timeSinceEpochLocalTimeMillis = utcNowMillis + gmtOffsetMillis;
+        //Log.i(TAG, "timeSinceEpochLocalTimeMillis=:" + timeSinceEpochLocalTimeMillis);
+        //timeSinceEpochLocalTimeMillis=:1493386212811
 
         /* This method simply converts milliseconds to days, disregarding any fractional days */
+        /*毫秒转换成天数*/
         long daysSinceEpochLocal = TimeUnit.MILLISECONDS.toDays(timeSinceEpochLocalTimeMillis);
-
+        //Log.i(TAG, "daysSinceEpochLocal=:" + daysSinceEpochLocal);
+        //daysSinceEpochLocal=:17284天
         /*
          * Finally, we convert back to milliseconds. This time stamp represents today's date at
          * midnight in GMT time. We will need to account for local time zone offsets when
          * extracting this information from the database.
+         * 转换成毫秒
          */
         long normalizedUtcMidnightMillis = TimeUnit.DAYS.toMillis(daysSinceEpochLocal);
-
+        //Log.i(TAG, "normalizedUtcMidnightMillis=:" + normalizedUtcMidnightMillis);
+        //normalizedUtcMidnightMillis=:1493337600000
+        //返回当地时间的毫秒数
         return normalizedUtcMidnightMillis;
     }
 
@@ -153,10 +177,12 @@ public final class SunshineDateUtils {
     public static String getFriendlyDateString(Context context, long dateInMillis, boolean showFullDate) {
 
         long localDate = getLocalDateFromUTC(dateInMillis);
-        long dayNumber = getDayNumber(localDate);
+        long dayNumber = getDayNumber(localDate);//天数
         long currentDayNumber = getDayNumber(System.currentTimeMillis());
-
+        //今天
         if (dayNumber == currentDayNumber || showFullDate) {
+            Log.i(TAG, "dayNumber=" + dayNumber + "; currentDayNumber=" + currentDayNumber);
+            Log.i(TAG, String.valueOf(showFullDate));
             /*
              * If the date we're building the String for is today's date, the format
              * is "Today, June 24"
@@ -164,6 +190,9 @@ public final class SunshineDateUtils {
             String dayName = getDayName(context, localDate);
             String readableDate = getReadableDateString(context, localDate);
             if (dayNumber - currentDayNumber < 2) {
+
+                Log.i(TAG, String.valueOf(dayNumber - currentDayNumber));
+                //显示Tomorrow
                 /*
                  * Since there is no localized format that returns "Today" or "Tomorrow" in the API
                  * levels we have to support, we take the name of the day (from SimpleDateFormat)

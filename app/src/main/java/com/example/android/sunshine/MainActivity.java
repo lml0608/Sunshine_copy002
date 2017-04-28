@@ -37,6 +37,7 @@ import com.example.android.sunshine.data.SunshinePreferences;
 import com.example.android.sunshine.data.WeatherContract;
 import com.example.android.sunshine.sync.SunshineSyncUtils;
 import com.example.android.sunshine.utilities.FakeDataUtils;
+import com.example.android.sunshine.utilities.SunshineDateUtils;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -74,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forecast);
         getSupportActionBar().setElevation(0f);
+
+        //SunshineDateUtils.getNormalizedUtcDateForToday();
 
 
 

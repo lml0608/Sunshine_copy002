@@ -122,6 +122,7 @@ public final class OpenWeatherJsonUtils {
              * We ignore all the datetime values embedded in the JSON and assume that
              * the values are returned in-order by day (which is not guaranteed to be correct).
              */
+            //日期加一天
             dateTimeMillis = startDay + SunshineDateUtils.DAY_IN_MILLIS * i;
             date = SunshineDateUtils.getFriendlyDateString(context, dateTimeMillis, false);
 
