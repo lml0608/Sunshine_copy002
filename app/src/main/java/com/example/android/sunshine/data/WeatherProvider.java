@@ -65,6 +65,7 @@ public class WeatherProvider extends ContentProvider {
          */
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = WeatherContract.CONTENT_AUTHORITY;
+        //authority = "com.example.android.sunshine";
 
         /*
          * For each type of URI you want to add, create a corresponding code. Preferably, these are
@@ -123,6 +124,14 @@ public class WeatherProvider extends ContentProvider {
      *               This must not be {@code null}.
      * @return The number of values that were inserted.
      */
+
+    /**
+     * 使用SQLiteDatabase的beginTransaction()方法可以开启一个事务，
+     * 程序执行到endTransaction() 方法时会检查事务的标志是否为成功，
+     * 如果程序执行到endTransaction()之前调用了setTransactionSuccessful() 方法设置事务的标志为成功则提交事务，
+     * 如果没有调用setTransactionSuccessful() 方法则回滚事务
+     *
+     */
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
@@ -130,10 +139,13 @@ public class WeatherProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
 
             case CODE_WEATHER:
+                //开启事务
                 db.beginTransaction();
+                //插入的条数
                 int rowsInserted = 0;
                 try {
                     for (ContentValues value : values) {
+                        //时间
                         long weatherDate =
                                 value.getAsLong(WeatherContract.WeatherEntry.COLUMN_DATE);
                         if (!SunshineDateUtils.isDateNormalized(weatherDate)) {

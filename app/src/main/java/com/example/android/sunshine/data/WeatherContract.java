@@ -14,11 +14,12 @@ public class WeatherContract {
 
     public static final String CONTENT_AUTHORITY = "com.example.android.sunshine";
     public static final Uri BASE_CONTENT_URL = Uri.parse("content://" + CONTENT_AUTHORITY);
-
+    //BASE_CONTENT_URL = content://com.example.android.sunshine
     public static final String PATH_WEATHER = "weather";
 
     public static final class WeatherEntry implements BaseColumns {
 
+        //CONTENT_URI = content://com.example.android.sunshine/weather
         public static final Uri CONTENT_URI = BASE_CONTENT_URL.buildUpon()
                 .appendPath(PATH_WEATHER)
                 .build();
@@ -42,7 +43,7 @@ public class WeatherContract {
 
         public static final String COLUMN_DEGREES = "degrees";
 
-
+        ////Uri = content://com.example.android.sunshine/weather/1493424000000
         public static Uri buildWeatherUriWithDate(long date) {
             return CONTENT_URI.buildUpon()
                     .appendPath(Long.toString(date))

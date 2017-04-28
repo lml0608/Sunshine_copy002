@@ -142,7 +142,9 @@ public class MainActivity extends AppCompatActivity implements
                 String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
 
                 String selection = WeatherContract.WeatherEntry.getSqlSelectForTodayOnwards();
-
+                //selection=date >= 1493337600000
+                Log.i(TAG, "selection=" + selection);
+                //content://com.example.android.sunshine/weather
                 return new CursorLoader(this,
                         forecastQueryUri,
                         MAIN_FORECAST_PROJECTION,

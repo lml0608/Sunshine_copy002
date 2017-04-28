@@ -91,6 +91,9 @@ public class DetailActivity extends AppCompatActivity implements
 
 //      COMPLETED (16) Use getData to get a reference to the URI passed with this Activity's Intent
         mUri = getIntent().getData();
+
+        //mUri = content://com.example.android.sunshine/weather/1493424000000
+        Log.i(TAG, "mUri = " + mUri);
 //      COMPLETED (17) Throw a NullPointerException if that URI is null
         if (mUri == null) throw new NullPointerException("URI for DetailActivity cannot be null");
 

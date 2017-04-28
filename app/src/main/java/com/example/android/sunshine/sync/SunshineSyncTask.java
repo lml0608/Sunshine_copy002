@@ -3,6 +3,7 @@ package com.example.android.sunshine.sync;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 
 import com.example.android.sunshine.data.WeatherContract;
 import com.example.android.sunshine.utilities.NetworkUtils;
@@ -31,15 +32,17 @@ public class SunshineSyncTask {
                     .getWeatherContentValuesFromJson(context, jsonWeatherResponse);
             if (weatherValues != null && weatherValues.length != 0) {
                 ContentResolver sunshineContentResolver = context.getContentResolver();
-
+                //清空表
                 sunshineContentResolver.delete(
                         WeatherContract.WeatherEntry.CONTENT_URI,
                         null,
                         null);
-
-                sunshineContentResolver.bulkInsert(
+                //重新插入新获取的数据，返回插入条数
+                int x = sunshineContentResolver.bulkInsert(
                         WeatherContract.WeatherEntry.CONTENT_URI,
                         weatherValues);
+
+                Log.i("SunshineSyncTask", "x = " + x);
             }
         } catch (JSONException e) {
             e.printStackTrace();
