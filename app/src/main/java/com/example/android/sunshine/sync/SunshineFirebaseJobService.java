@@ -23,7 +23,7 @@ public class SunshineFirebaseJobService extends JobService {
             protected Void doInBackground(Void... params) {
 
                 Context context = getApplicationContext();
-
+                //调用服务更新数据
                 SunshineSyncTask.syncWeather(context);
                 return null;
             }
