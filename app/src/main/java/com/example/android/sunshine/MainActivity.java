@@ -174,6 +174,8 @@ public class MainActivity extends AppCompatActivity implements
         Log.i(TAG, "你好" + String.valueOf(data.getCount()));
 
 //      COMPLETED (28) Call mForecastAdapter's swapCursor method and pass in the new Cursor
+
+        //传递值给recyclerview
         mForecastAdapter.swapCursor(data);
 //      COMPLETED (29) If mPosition equals RecyclerView.NO_POSITION, set it to 0
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;

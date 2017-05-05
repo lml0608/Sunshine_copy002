@@ -43,6 +43,8 @@ public class SunshineSyncTask {
                         weatherValues);
 
                 Log.i("SunshineSyncTask", "x = " + x);
+
+                Log.i("SunshineSyncTask", "notifyChange2");
             }
         } catch (JSONException e) {
             e.printStackTrace();

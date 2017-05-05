@@ -18,6 +18,7 @@ package com.example.android.sunshine;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -191,6 +192,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<ForecastAdapter.Foreca
           * String.
           */
         String lowString = SunshineWeatherUtils.formatTemperature(mContext, lowInCelsius);
+        Log.i("lowString", "lowString3");
         String lowA11y = mContext.getString(R.string.a11y_low_temp, lowString);
 
          /* Set the text and content description (for accessibility purposes) */

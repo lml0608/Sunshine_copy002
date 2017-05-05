@@ -65,10 +65,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         if (key.equals(getString(R.string.pref_location_key))) {
             SunshinePreferences.resetLocationCoordinates(activity);
+            //开启服务，更新数据
             SunshineSyncUtils.startImmediateSync(activity);
         }  else if (key.equals(getString(R.string.pref_units_key))) {
             // units have changed. update lists of weather entries accordingly
             activity.getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
+
+            Log.i(TAG, "notifyChange1");
         }
 
         Log.i(TAG, "key=" + key);
