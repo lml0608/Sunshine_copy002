@@ -170,6 +170,35 @@ public class SunshinePreferences {
         return DEFAULT_WEATHER_COORDINATES;
     }
 
+    public static long getLastNotificationTimeInMillis(Context context) {
+        /* Key for accessing the time at which Sunshine last displayed a notification */
+        String lastNotificationKey = context.getString(R.string.pref_last_notification);
+
+        /* As usual, we use the default SharedPreferences to access the user's preferences */
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+
+        /*
+         * Here, we retrieve the time in milliseconds when the last notification was shown. If
+         * SharedPreferences doesn't have a value for lastNotificationKey, we return 0. The reason
+         * we return 0 is because we compare the value returned from this method to the current
+         * system time. If the difference between the last notification time and the current time
+         * is greater than one day, we will show a notification again. When we compare the two
+         * values, we subtract the last notification time from the current system time. If the
+         * time of the last notification was 0, the difference will always be greater than the
+         * number of milliseconds in a day and we will show another notification.
+         */
+        long lastNotificationTime = sp.getLong(lastNotificationKey, 0);
+
+        return lastNotificationTime;
+    }
+
+    public static long getEllapsedTimeSinceLastNotification(Context context) {
+        long lastNotificationTimeMillis =
+                SunshinePreferences.getLastNotificationTimeInMillis(context);
+        long timeSinceLastNotification = System.currentTimeMillis() - lastNotificationTimeMillis;
+        return timeSinceLastNotification;
+    }
+
 
 
     public static boolean areNotificationsEnabled(Context context) {

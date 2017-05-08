@@ -3,10 +3,13 @@ package com.example.android.sunshine.sync;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.text.format.DateUtils;
 import android.util.Log;
 
+import com.example.android.sunshine.data.SunshinePreferences;
 import com.example.android.sunshine.data.WeatherContract;
 import com.example.android.sunshine.utilities.NetworkUtils;
+import com.example.android.sunshine.utilities.NotificationUtils;
 import com.example.android.sunshine.utilities.OpenWeatherJsonUtils;
 
 import org.json.JSONException;
@@ -41,6 +44,18 @@ public class SunshineSyncTask {
                 int x = sunshineContentResolver.bulkInsert(
                         WeatherContract.WeatherEntry.CONTENT_URI,
                         weatherValues);
+
+                boolean notificationsEnabled = SunshinePreferences.areNotificationsEnabled(context);
+                long timeSinceLastNotification = SunshinePreferences
+                        .getEllapsedTimeSinceLastNotification(context);
+                boolean oneDayPassedSinceLastNotification = false;//DAY_IN_MILLIS
+                if (timeSinceLastNotification >= DateUtils.MINUTE_IN_MILLIS) {
+                    oneDayPassedSinceLastNotification = true;
+                }
+
+                if (notificationsEnabled && oneDayPassedSinceLastNotification) {
+                    NotificationUtils.notifyUserOfNewWeather(context);
+                }
 
                 Log.i("SunshineSyncTask", "x = " + x);
 
